@@ -11,3 +11,43 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.entry{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.entry-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+.title{
+  flex-basis: 2;
+}
+.date{
+  flex-grow: 1;
+}
+.back{
+  flex-grow: 1;
+}
+.delete{
+  flex-grow: 1;
+}
+.edit{
+  flex-grow: 1;
+}
+.entry-body{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  text-align: left;
+}
+.editor{
+  display:flex;
+  flex-direction: column;
+  
+}
+.form-group{
+  width: 100%;
+}
