@@ -9,9 +9,11 @@ export default function Edit(){
         <div className='editor'>
         <div className="entry-bar">
             <div className='title'>
+            <p>Title:</p>
             <input type="text" id="title" name="title" placeholder='Enter entry name'></input>
             </div>
             <div className='date'>
+            <p>Date:</p>
             <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
             </div>
             <div className='save'>

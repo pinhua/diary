@@ -21,12 +21,15 @@ code {
   flex-direction: row;
   align-items: flex-start;
   flex-grow: 1;
+  padding: 1em;
 }
 .title{
   flex-basis: 2;
+  flex-direction: column;
 }
 .date{
   flex-grow: 1;
+  flex-direction: column;
 }
 .back{
   flex-grow: 1;
@@ -42,6 +45,7 @@ code {
   align-items: flex-start;
   flex-direction: row;
   text-align: left;
+  padding: 1em;
 }
 .editor{
   display:flex;
@@ -50,4 +54,12 @@ code {
 }
 .form-group{
   width: 100%;
+  padding: 1em;
+}
+textarea{
+  width: 100%;
+}
+#new-entry{
+  font-size: larger;
+  margin: 1em;
 }

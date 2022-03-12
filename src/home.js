@@ -1,31 +1,57 @@
-import {Link} from 'react-router-dom';
-import {Button} from 'react-bootstrap';
-export default function home() {
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from './base.js'
+import React, { useState, useEffect } from 'react';
+
+export default function Home() {
+    const [ data, setData ] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            const querySnapshot = await getDocs(collection(db, "Diary"));
+            var entries = [];
+            querySnapshot.forEach((doc) => {
+                var data = doc.data();
+
+                var date = new Date(data.Date.seconds * 1000).toLocaleDateString('en-GB')
+                entries.push({ id: doc.id, title: data.Title, date: date, body: data.Body });
+            });
+            setData(entries);
+        };
+        fetchData();
+    }, []);
     return (
         <div className="App container-fluid">
 
-            <button>New Entry</button>
+            <button id='new-entry'>New Entry</button>
+            <div id="entries">
 
-            <div className='entry flex-column d-flex'>
-                <div className='entry-bar flex-row'>
-                    <div className='title p-2'>
-                        <Link to="/view"><h1>Entry 1</h1></Link>
+                {data.map(item => (
+                    <div key={item.id} className='entry flex-column d-flex'>
+                        <div className='entry-bar flex-row'>
+                            <div className='title p-2'>
+                                <Link to='/view'><h1>{item.title}</h1></Link>
+                            </div>
+                            <div className='date p-2'>
+                                <p>{item.date}</p>
+                            </div>
+                            <div className='delete p-2 ml-auto'>
+                                <Button variant='danger'>Delete</Button>
+                            </div>
+
+                        </div>
+
+                        <div className='entry-body'>
+                            <p>{item.body}</p>
+                        </div>
                     </div>
-                    <div className='date p-2'>
-                        <p>23/01/22</p>
-                    </div>
-                    <div className='delete p-2 ml-auto'>
-                        <Button variant='danger'>Delete</Button>
-                    </div>
-                </div>
-                <div className='entry-body '>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nullam ut ante nisi. Integer sodales nulla et ligula cursus elementum a nec tortor. I
-                    nteger tristique, felis vitae tincidunt iaculis, dolor ante suscipit nulla, vel
-                    lacinia massa sapien eu lectus. Praesent in eleifend mauris, convallis
-                    condimentum lacus
-                </div>
+                ))}
             </div>
+
+
+
+
+            
         </div>
     )
 }
