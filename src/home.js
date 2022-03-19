@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from './base.js'
 import React, { useState, useEffect } from 'react';
-
 export default function Home() {
     const [ data, setData ] = useState([]);
     useEffect(() => {
@@ -30,7 +29,7 @@ export default function Home() {
                     <div key={item.id} className='entry flex-column d-flex'>
                         <div className='entry-bar flex-row'>
                             <div className='title p-2'>
-                                <Link to='/view'><h1>{item.title}</h1></Link>
+                                <Link to={'/view/'+item.id}><h1>{item.title}</h1></Link>
                             </div>
                             <div className='date p-2'>
                                 <p>{item.date}</p>

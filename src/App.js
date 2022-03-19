@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './App.css';
 import Home from './home';
 import View from './view';
@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<Home />} />
-      <Route path='view' element={<View />} />
+      <Route path='view/:id' element={<View />} />
       <Route path='edit' element={<Edit />} />
     </Routes>
     </BrowserRouter>
