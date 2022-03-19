@@ -29,7 +29,7 @@ export default function View() {
                     <p>{data.Date}</p>
                 </div>
                 <div className='edit'>
-                    <Button href='/edit'>Edit</Button></div>
+                    <Button href={'/edit/' + id}>Edit</Button></div>
                 <div className='delete'>
                     <Button variant='danger'>Delete</Button></div>
                 <div className='back'>

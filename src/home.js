@@ -22,7 +22,7 @@ export default function Home() {
     return (
         <div className="App container-fluid">
 
-            <button id='new-entry'>New Entry</button>
+            <Link to={'/new/'}>New entry</Link>
             <div id="entries">
 
                 {data.map(item => (
