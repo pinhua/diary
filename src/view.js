@@ -1,11 +1,16 @@
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { collection, getDoc, doc } from "firebase/firestore";
+import { collection, getDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from './base.js'
 import React, { useState, useEffect } from 'react';
 export default function View() {
+    let navigate = useNavigate();
     const { id } = useParams();
     const [ data, setData ] = useState([]);
+    const handleClick = async event => {
+        await deleteDoc(doc(db, "Diary", event.target.dataset.id))
+        navigate('/');
+    }
     useEffect(() => {
         const fetchData = async () => {
             const docRef = doc(db, "Diary", id);
@@ -31,7 +36,7 @@ export default function View() {
                 <div className='edit'>
                     <Button href={'/edit/' + id}>Edit</Button></div>
                 <div className='delete'>
-                    <Button variant='danger'>Delete</Button></div>
+                    <Button variant='danger' data-id={id} onClick={handleClick}>Delete</Button></div>
                 <div className='back'>
 
                     <Link to="/"><h1>Back</h1></Link>

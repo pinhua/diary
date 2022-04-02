@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import { useState, useEffect } from 'react';
 import { getDoc, doc, setDoc, addDoc, collection } from "firebase/firestore";
 import { db } from './base.js'
+import {getStorage, ref} from 'firebase/storage'
 import "react-datepicker/dist/react-datepicker.css";
 import { useBootstrapBreakpoints } from 'react-bootstrap/esm/ThemeProvider';
 export default function Edit() {
@@ -12,6 +13,8 @@ export default function Edit() {
     const [ data, setData ] = useState([]);
     const [ title, setTitle ] = useState('');
     const [ body, setBody ] = useState('');
+    const storage = getStorage();
+    const storageRef = ref(storage);
     let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,6 +27,7 @@ export default function Edit() {
             });
         }
         else{
+            //new entry
             await addDoc(collection(db, 'Diary'), {
                 Body: body,
                 Title: title,

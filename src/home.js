@@ -1,10 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from './base.js'
 import React, { useState, useEffect } from 'react';
+import { async } from '@firebase/util';
 export default function Home() {
+    
     const [ data, setData ] = useState([]);
+    const handleClick = async event => {
+        await deleteDoc(doc(db, "Diary", event.target.dataset.id))
+        window.location.reload(false);
+    }
+    const deleteEntry = (id) => {
+        //deleteDoc(doc(db, "Diary", id))
+    }
     useEffect(() => {
         const fetchData = async () => {
             const querySnapshot = await getDocs(collection(db, "Diary"));
@@ -35,7 +44,7 @@ export default function Home() {
                                 <p>{item.date}</p>
                             </div>
                             <div className='delete p-2 ml-auto'>
-                                <Button variant='danger'>Delete</Button>
+                                <Button variant='danger' data-id={item.id} onClick={handleClick}>Delete</Button>
                             </div>
 
                         </div>
