@@ -2,9 +2,9 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import { useState, useEffect } from 'react';
+import {getStorage, ref, uploadBytes} from 'firebase/storage'
 import { getDoc, doc, setDoc, addDoc, collection } from "firebase/firestore";
 import { db } from './base.js'
-import {getStorage, ref} from 'firebase/storage'
 import "react-datepicker/dist/react-datepicker.css";
 import { useBootstrapBreakpoints } from 'react-bootstrap/esm/ThemeProvider';
 export default function Edit() {
@@ -14,7 +14,7 @@ export default function Edit() {
     const [ title, setTitle ] = useState('');
     const [ body, setBody ] = useState('');
     const storage = getStorage();
-    const storageRef = ref(storage);
+    const storageRef = ref(storage, 'public');
     let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,7 +26,7 @@ export default function Edit() {
                 Date: date
             });
         }
-        else{
+        else {
             //new entry
             await addDoc(collection(db, 'Diary'), {
                 Body: body,
@@ -59,7 +59,17 @@ export default function Edit() {
             setData({ Title: "", Date: new Date(), Body: "" })
         }
     }, []);
+    const [ selectedFile, setSelectedFile ] = useState();
+    const [ isFilePicked, setIsFilePicked ] = useState(false);
+    const changeHandler = async (evt) => {
+        setSelectedFile(evt.target.files[ 0 ]);
+        const storage = getStorage();
+        const storageRef = ref(storage, storageRef.child(selectedFile));
+        await uploadBytes(storageRef, selectedFile);
+    };
 
+    const handleSubmission = () => {
+    };
     return (
         <div className='editor'>
             <form onSubmit={e => { handleSubmit(e) }}>
@@ -78,7 +88,8 @@ export default function Edit() {
 
                     <div className='image'>
 
-                        <Button>Add image</Button>
+                        <input type='file' name='file' onChange={changeHandler} />
+                        
                     </div>
 
                 </div>
