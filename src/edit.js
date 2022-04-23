@@ -7,6 +7,12 @@ import { getDoc, doc, setDoc, addDoc, collection } from "firebase/firestore";
 import { db } from './base.js'
 import "react-datepicker/dist/react-datepicker.css";
 import { useBootstrapBreakpoints } from 'react-bootstrap/esm/ThemeProvider';
+
+function randomStringGenerator() {
+    return new Date().getTime().toString();
+
+}
+
 export default function Edit() {
     const [ date, setDate ] = useState(new Date());
     const { id } = useParams();
@@ -14,7 +20,7 @@ export default function Edit() {
     const [ title, setTitle ] = useState('');
     const [ body, setBody ] = useState('');
     const storage = getStorage();
-    const storageRef = ref(storage, 'public');
+    const storageRef = ref(storage, 'public/'+randomStringGenerator()+'.jpg');
     let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -62,14 +68,19 @@ export default function Edit() {
     const [ selectedFile, setSelectedFile ] = useState();
     const [ isFilePicked, setIsFilePicked ] = useState(false);
     const changeHandler = async (evt) => {
+        
+        
+       
         setSelectedFile(evt.target.files[ 0 ]);
-        const storage = getStorage();
-        const storageRef = ref(storage, storageRef.child(selectedFile));
-        await uploadBytes(storageRef, selectedFile);
+        console.log(evt.target.files[0]);
+        console.log("file selected")
+        const metadata = {
+            contentType: 'image/jpeg'
+        };
+        await uploadBytes(storageRef, selectedFile, metadata);
+        console.log("file uploaded")
     };
 
-    const handleSubmission = () => {
-    };
     return (
         <div className='editor'>
             <form onSubmit={e => { handleSubmit(e) }}>
