@@ -1,33 +1,61 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-export default function view() {
+import { collection, getDoc, doc, deleteDoc } from "firebase/firestore";
+import { db } from './base.js'
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import React, { useState, useEffect } from 'react';
+export default function View() {
+    let navigate = useNavigate();
+    const { id } = useParams();
+    const storage = getStorage();
+    const [url, setUrl] = useState([]);
+    useEffect(async () => {
+        const url = await getDownloadURL(ref(storage, 'public/test.jpg'))
+        setUrl(url);
+    })
+    const [ data, setData ] = useState([]);
+    const handleClick = async event => {
+        await deleteDoc(doc(db, "Diary", event.target.dataset.id))
+        navigate('/');
+    }
+    useEffect(() => {
+        const fetchData = async () => {
+            const docRef = doc(db, "Diary", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                var data = docSnap.data()
+                var date = new Date(data.Date.seconds * 1000).toLocaleDateString('en-GB');
+                data.Date = date;
+                setData(data)
+            }
+        };
+        fetchData();
+    }, []);
     return (
-    <body>    
-        <div className="entry-bar">
-            <div className='title'>
-                <h1>Entry 1</h1>
-            </div>
-            <div className='date'>
-                <p>23/01/22</p>
-            </div>
-            <div className='edit'>
-                <Button href='/edit'>Edit</Button></div>
-            <div className='delete'>
-                <Button variant='danger'>Delete</Button></div>
-            <div className='back'>
+        <div>
+            <div className="entry-bar">
+                <div className='title'>
+                    <h1>{data.Title}</h1>
+                </div>
+                <div className='date'>
+                    <p>{data.Date}</p>
+                </div>
+                <div className='edit'>
+                    <Button href={'/edit/' + id}>Edit</Button></div>
+                <div className='delete'>
+                    <Button variant='danger' data-id={id} onClick={handleClick}>Delete</Button></div>
+                <div className='back'>
 
-                <Link to="/"><h1>Back</h1></Link>
+                    <Link to="/"><h1>Back</h1></Link>
+                </div>
+
             </div>
 
+            <div className='entry-body '>
+                {data.Body}
+               
+            </div>
+            <img src={url}></img>
         </div>
-
-<div className='entry-body '>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Nullam ut ante nisi. Integer sodales nulla et ligula cursus elementum a nec tortor. I
-nteger tristique, felis vitae tincidunt iaculis, dolor ante suscipit nulla, vel
-lacinia massa sapien eu lectus. Praesent in eleifend mauris, convallis
-condimentum lacus
-</div>
-</body>
     )
 }
