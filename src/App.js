@@ -4,6 +4,7 @@ import Home from './home';
 import View from './view';
 import Edit from './edit';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { Component }  from 'react';
 function App() {
   return (
     <BrowserRouter>

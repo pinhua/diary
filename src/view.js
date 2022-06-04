@@ -1,18 +1,26 @@
 import { Link, useHistory, useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { collection, getDoc, doc, deleteDoc } from "firebase/firestore";
-import { db } from './base.js'
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { db, storage } from './base.js'
+import { getStorage, ref, getDownloadURL, listAll } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
 export default function View() {
     let navigate = useNavigate();
     const { id } = useParams();
-    const storage = getStorage();
     const [url, setUrl] = useState([]);
-    useEffect(async () => {
-        const url = await getDownloadURL(ref(storage, 'public/test.jpg'))
-        setUrl(url);
-    })
+    const [imageUpload, setImageUpload]=useState(null);
+    const [imageList, setImageList]=useState([]);
+    const imageListRef = ref(storage, 'public/')
+    useEffect(() => {
+        console.log(imageListRef);
+        listAll(imageListRef).then((response) => {
+            response.items.forEach((item => {
+                getDownloadURL(item).then((url) => {
+                    setImageList((prev) => [...prev, url]);
+                });
+            }));
+        });
+    }, []);
     const [ data, setData ] = useState([]);
     const handleClick = async event => {
         await deleteDoc(doc(db, "Diary", event.target.dataset.id))
@@ -55,6 +63,9 @@ export default function View() {
                 {data.Body}
                
             </div>
+            {imageList.map((url) => {
+                return <img src={url} />
+            })}
             <img src={url}></img>
         </div>
     )

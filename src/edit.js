@@ -2,16 +2,19 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import { useState, useEffect } from 'react';
-import {getStorage, ref, uploadBytes} from 'firebase/storage'
+import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage'
 import { getDoc, doc, setDoc, addDoc, collection } from "firebase/firestore";
-import { db } from './base.js'
+import { db, storage } from './base.js'
 import "react-datepicker/dist/react-datepicker.css";
 import { useBootstrapBreakpoints } from 'react-bootstrap/esm/ThemeProvider';
-
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+import { initializeApp } from 'firebase/app';
 function randomStringGenerator() {
     return new Date().getTime().toString();
 
 }
+
 
 export default function Edit() {
     const [ date, setDate ] = useState(new Date());
@@ -19,8 +22,17 @@ export default function Edit() {
     const [ data, setData ] = useState([]);
     const [ title, setTitle ] = useState('');
     const [ body, setBody ] = useState('');
-    const storage = getStorage();
-    const storageRef = ref(storage, 'public/'+randomStringGenerator()+'.jpg');
+    const [imageUpload, setImageUpload] = useState(null);
+    const [imageList, setImageList] = useState([]);
+    const uploadImage = () => {
+        if (imageUpload == null) return;
+        const imageRef = ref(storage, 'public/'+randomStringGenerator()+'.jpg');
+        uploadBytes(imageRef, imageUpload).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+                setImageList((prev)=>[...prev, url])
+            })
+        })
+    }
     let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,19 +79,7 @@ export default function Edit() {
     }, []);
     const [ selectedFile, setSelectedFile ] = useState();
     const [ isFilePicked, setIsFilePicked ] = useState(false);
-    const changeHandler = async (evt) => {
-        
-        
-       
-        setSelectedFile(evt.target.files[ 0 ]);
-        console.log(evt.target.files[0]);
-        console.log("file selected")
-        const metadata = {
-            contentType: 'image/jpeg'
-        };
-        await uploadBytes(storageRef, selectedFile, metadata);
-        console.log("file uploaded")
-    };
+    
 
     return (
         <div className='editor'>
@@ -94,12 +94,14 @@ export default function Edit() {
                         <DatePicker selected={date} onChange={(newDate) => setDate(newDate)} />
                     </div>
                     <div className='save'>
-                        <input className="btn btn-primary" type="submit" value="Save" />
+                        <input className="btn btn-primary" type="submit" value="Save" onClick={uploadImage}/>
                     </div>
 
                     <div className='image'>
 
-                        <input type='file' name='file' onChange={changeHandler} />
+                        <input type='file' name='file' onChange={(event) => {
+                            setImageUpload(event.target.files[0]);
+                        }} />
                         
                     </div>
 
