@@ -33,8 +33,10 @@ export default function View() {
             if (docSnap.exists()) {
                 var data = docSnap.data()
                 var date = new Date(data.Date.seconds * 1000).toLocaleDateString('en-GB');
-                data.Date = date;
-                setData(data)
+                data.Date = date;    
+                console.log("Hwere are the images to view");            
+                console.log(data.Image);
+                setData(data);
             }
         };
         fetchData();
@@ -63,10 +65,16 @@ export default function View() {
                 {data.Body}
                
             </div>
-            {imageList.map((url) => {
+            
+            {/*data.Image.map((url) => {
                 return <img src={url} />
-            })}
-            <img src={url}></img>
+            }) */}
+           {/* */}
+           <h3>Images</h3>
+           {(data.Image != undefined) ? data.Image.map(url => {
+               return <img src={url} />
+           }) : 'No Images'}
+
         </div>
     )
 }
