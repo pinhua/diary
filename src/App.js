@@ -3,7 +3,7 @@ import './App.css';
 import Home from './home';
 import View from './view';
 import Edit from './edit';
-import Calendar from './calender';
+import Calendar from './calendar';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { Component }  from 'react';
 function App() {
