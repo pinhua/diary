@@ -32,6 +32,7 @@ export default function Home() {
         <div className="App container-fluid">
 
             <Link to={'/new/'}>New entry</Link>
+            <Link to={'/calendar/'}>Calendar</Link>
             <div id="entries">
 
                 {data.map(item => (

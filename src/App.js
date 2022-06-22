@@ -3,7 +3,7 @@ import './App.css';
 import Home from './home';
 import View from './view';
 import Edit from './edit';
-import Calendar from './calendar';
+import CalendarGfg from './calendar';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { Component }  from 'react';
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <Route path='view/:id' element={<View />} />
       <Route path='edit/:id' element={<Edit />} />
       <Route path='new' element={<Edit />} />
-      <Route path='calendar' element={<Calendar />} />
+      <Route path='calendar' element={<CalendarGfg />} />
     </Routes>
     </BrowserRouter>
   );
